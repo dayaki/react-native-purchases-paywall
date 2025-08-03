@@ -57,7 +57,7 @@ const PayWallController = () => {
     // Animate progress over 3 seconds
     Animated.timing(progressAnim, {
       toValue: 1,
-      duration: 5000,
+      duration: 6000,
       useNativeDriver: false,
     }).start(() => {
       setShowCloseButton(true);
@@ -177,7 +177,6 @@ const PayWallController = () => {
     setLoading(true);
     try {
       const { customerInfo } = await Purchases.purchasePackage(selectedPackage);
-      console.log("@@@@ customerInfo", customerInfo)
       if (
         typeof customerInfo.entitlements.active[ENTITLEMENT_ID] !== 'undefined'
       ) {
@@ -185,14 +184,10 @@ const PayWallController = () => {
         navigation.goBack();
         setLoading(false);
       } else {
-        console.log('@@@@ error buying');
         setLoading(false);
       }
     } catch (e) {
       setLoading(false);
-      if (!e.userCancelled) {
-        console.log(e);
-      }
     }
   };
 
@@ -229,7 +224,7 @@ const PayWallController = () => {
                 stroke="#000000"
                 strokeWidth={2}
                 fill="none"
-                strokeDasharray={69.12} // 2 * π * 11
+                strokeDasharray={69.12}
                 strokeDashoffset={69.12 - (progress * 69.12) / 100}
                 strokeLinecap="round"
                 transform="rotate(-90 14 14)"
@@ -248,12 +243,31 @@ const PayWallController = () => {
       </View>
 
       <View style={styles.contentView}>
-        <View>
-          <Text style={styles.title}>Unlock Premium Access</Text>
-          <Text style={styles.description}>
+        <Text style={styles.title}>Unlock Premium Access</Text>
+        {/* <Text style={styles.description}>
             Enjoy powerful volume boost, enhanced bass, equalizer control, and
             crystal clear sound in one app.
-          </Text>
+          </Text> */}
+
+        <View style={styles.list}>
+          <View style={styles.listItem}>
+            <Text style={styles.description}>
+              * Enjoy powerful volume boost.
+            </Text>
+          </View>
+          <View style={styles.listItem}>
+            <Text style={styles.description}>
+              * Enhanced bass, equalizer controls.
+            </Text>
+          </View>
+          <View style={styles.listItem}>
+            <Text style={styles.description}>
+              * Unlock extreme volume mode - Loud crystal clear sound.
+            </Text>
+          </View>
+          <View style={styles.listItem}>
+            <Text style={styles.description}>* Remove annoying paywalls</Text>
+          </View>
         </View>
 
         <View style={styles.packages}>
@@ -322,12 +336,12 @@ const PayWallController = () => {
 
           <TouchableOpacity style={styles.button} onPress={handlePayment}>
             {loading ? (
-                <Text style={styles.buttonText}>Loading...</Text>
-              ): (
-            <Text style={styles.buttonText}>
-              {hasTrial ? 'Try Free for 3 Days' : 'Continue'}
+              <Text style={styles.buttonText}>Loading...</Text>
+            ) : (
+              <Text style={styles.buttonText}>
+                {hasTrial ? 'Try Free for 3 Days' : 'Continue'}
               </Text>
-              )}
+            )}
           </TouchableOpacity>
           <View
             style={[
@@ -368,7 +382,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 12,
     position: 'absolute',
-    top: 54,
+    top: 46,
     right: 20,
     zIndex: 500,
   },
@@ -382,20 +396,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 12,
     position: 'absolute',
-    top: 54,
+    top: 46,
     right: 20,
     zIndex: 500,
   },
   video: {
     width: '100%',
-    height: 300,
+    height: 280,
   },
   contentView: {
     paddingHorizontal: 20,
     backgroundColor: '#000',
     paddingTop: 20,
     flex: 1,
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     paddingBottom: 30,
   },
   fadeOverlay: {
@@ -417,7 +431,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center',
+    textAlign: 'left',
     fontFamily: FONT_FAMILY_MEDIUM,
     lineHeight: 20,
   },
@@ -519,5 +533,31 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     opacity: 0.8,
     textDecorationLine: 'underline',
+  },
+  list: {
+    alignItems: 'flex-start',
+    alignSelf: 'center',
+    width: '100%',
+  },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  listIcon: {
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  listText: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    textAlign: 'left',
+    fontFamily: FONT_FAMILY_REGULAR,
+    lineHeight: 20,
+    opacity: 0.8,
+    width: '90%',
   },
 });
